@@ -1,0 +1,741 @@
+/* 全局设置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    /* 应用圆润饱满的字体：站酷快乐体 */
+    font-family: 'ZCOOL KuaiLe', cursive;
+    background-color: #020b1a;
+    color: #fff;
+}
+
+/* 背景层 */
+.background-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+.bg-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.9;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(2, 11, 26, 0.3), rgba(0, 0, 0, 0.6));
+}
+
+/* 场景布局 */
+.scene {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 月亮设计 */
+.moon-container {
+    position: absolute;
+    top: 18%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 1.5s ease;
+}
+
+.moon {
+    width: 130px;
+    height: 130px;
+    background-color: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.9), 0 0 80px rgba(255, 255, 255, 0.5);
+    z-index: 10;
+}
+
+/* 海面月光 */
+.moon-reflection {
+    width: 100px;
+    height: 300px;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.1) 40%, rgba(255, 255, 255, 0) 100%);
+    filter: blur(10px);
+    margin-top: 5px;
+    opacity: 0.7;
+}
+
+/* 海面散落星光 */
+.sea-sparkles {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 45%;
+    z-index: 5;
+    pointer-events: none;
+    background-image:
+        radial-gradient(white 1px, transparent 2px),
+        radial-gradient(rgba(255, 255, 255, 0.7) 1px, transparent 2px);
+    background-size: 100px 100px, 70px 70px;
+    background-position: 0 0, 40px 40px;
+    opacity: 0.4;
+    mask-image: linear-gradient(to top, black 20%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to top, black 20%, transparent 100%);
+}
+
+/* 开场文字 */
+.intro-text {
+    position: absolute;
+    top: 45%;
+    font-size: 3.5rem;
+    letter-spacing: 0.5rem;
+    color: #fff;
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 255, 255, 0.8);
+    opacity: 0;
+    animation: textSequence 5s forwards;
+    z-index: 20;
+    font-weight: normal;
+}
+
+@keyframes textSequence {
+    0% {
+        opacity: 0;
+        transform: translateY(15px) scale(0.95);
+    }
+
+    20% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+    80% {
+        opacity: 1;
+        filter: blur(0);
+    }
+
+    100% {
+        opacity: 0;
+        filter: blur(8px);
+        transform: scale(1.05);
+    }
+}
+
+/* 星星容器 */
+.stars-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+/* 单个星星包装 */
+.star-wrapper {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    pointer-events: auto;
+    opacity: 0;
+    transition: opacity 2s ease, transform 0.3s ease;
+    padding: 30px;
+    margin: -30px;
+}
+
+/* 星星本体 */
+.star {
+    width: 12px;
+    height: 12px;
+    background-color: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 15px #fff, 0 0 30px #fff;
+    animation: twinkle 4s infinite ease-in-out;
+}
+
+/* 城市名称 */
+.city-name {
+    margin-top: 10px;
+    font-size: 1.4rem;
+    color: rgba(255, 255, 255, 0.95);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    opacity: 0.8;
+    transition: all 0.3s;
+    letter-spacing: 1px;
+}
+
+.star-wrapper:hover .city-name {
+    opacity: 1;
+    transform: translateY(2px) scale(1.1);
+    color: #ffd700;
+}
+
+.star-wrapper:hover .star {
+    transform: scale(1.4);
+}
+
+@keyframes twinkle {
+
+    0%,
+    100% {
+        opacity: 0.5;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+}
+
+/* --- 弹窗与滚动修复区域 --- */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.05);
+    /* 几乎透明 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s ease;
+    z-index: 100;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background-color: rgba(2, 11, 26, 0.6);
+    background-size: cover;
+    background-position: center;
+    width: 85%;
+    max-width: 800px;
+    height: 85vh;
+    /* 限制弹窗总高度 */
+    border-radius: 25px;
+    color: #fff;
+    position: relative;
+    box-shadow: 0 20px 80px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.2);
+    transform: scale(0.9);
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    flex-direction: column;
+    /* 纵向排列 */
+    backdrop-filter: blur(10px);
+}
+
+.modal-overlay.active .modal-content {
+    transform: scale(1);
+}
+
+/* 修复关键：让 modalBody 填满剩余空间，并控制子元素滚动 */
+#modalBody {
+    flex: 1;
+    min-height: 0;
+    /* Flexbox 嵌套滚动的关键 */
+    width: 100%;
+    border-radius: 0 0 25px 25px;
+    overflow: hidden;
+}
+
+/* 内容滚动层 */
+.modal-inner-scroll {
+    background: linear-gradient(to bottom, rgba(2, 11, 26, 0.2) 0%, rgba(2, 11, 26, 0.85) 50%, rgba(2, 11, 26, 0.98) 100%);
+    width: 100%;
+    height: 100%;
+    padding: 50px 40px;
+    overflow-y: auto;
+    /* 开启垂直滚动 */
+    -webkit-overflow-scrolling: touch;
+    /* 手机端顺滑滚动 */
+}
+
+.close-btn {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #fff;
+    z-index: 200;
+    /* 提高层级，防止点不动 */
+    line-height: 40px;
+    transition: background 0.3s;
+}
+
+.close-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.modal-title {
+    font-size: 2.8rem;
+    margin-bottom: 20px;
+    margin-top: 150px;
+    color: #fff;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    padding-bottom: 15px;
+    letter-spacing: 2px;
+}
+
+.modal-tags span {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: #fff;
+    padding: 8px 18px;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    margin-right: 10px;
+    margin-bottom: 25px;
+    backdrop-filter: blur(5px);
+}
+
+.modal-text p {
+    line-height: 2.2;
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+    color: #f0f0f0;
+    font-weight: normal;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.modal-tips {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 30px;
+    border-radius: 20px;
+    margin-top: 30px;
+    border-left: 8px solid #ffd700;
+}
+
+.modal-tips h4 {
+    margin-bottom: 15px;
+    color: #ffd700;
+    font-size: 1.5rem;
+}
+
+.modal-tips li {
+    margin-bottom: 12px;
+    list-style: none;
+    position: relative;
+    padding-left: 25px;
+    color: #ddd;
+    font-size: 1.1rem;
+}
+
+.modal-tips li::before {
+    content: '★';
+    position: absolute;
+    left: 0;
+    color: #ffd700;
+    font-size: 1rem;
+    top: 3px;
+}
+
+/* 滚动条美化 */
+.modal-inner-scroll::-webkit-scrollbar {
+    width: 10px;
+    /* 加宽了一点 */
+}
+
+.modal-inner-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.modal-inner-scroll::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.4);
+    border-radius: 5px;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    /* 增加一点间隙感 */
+}
+
+.modal-inner-scroll::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+/* --- 新增功能：足迹打卡样式 --- */
+
+/* 1. 弹窗内的打卡按钮 */
+.visit-btn {
+    display: inline-block;
+    margin-top: 20px;
+    /* 放在标题下方 */
+    padding: 10px 25px;
+    font-family: 'ZCOOL KuaiLe', cursive;
+    font-size: 1.2rem;
+    color: #fff;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 50px;
+    background: rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    /* 图标和字的间距 */
+    width: fit-content;
+}
+
+.visit-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+}
+
+/* 2. 已打卡状态 (按钮) */
+.visit-btn.visited {
+    background: linear-gradient(135deg, #ffd700 0%, #fdb931 100%);
+    /* 金色渐变 */
+    border-color: #ffd700;
+    color: #8a6e00;
+    /* 深金色字体 */
+    text-shadow: none;
+    font-weight: bold;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+}
+
+.visit-btn.visited:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.8);
+}
+
+/* 3. 主地图星星的变化 - 已打卡 */
+.star-wrapper.visited .star {
+    background-color: #ffd700;
+    /* 星星变金 */
+    box-shadow: 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 50px rgba(255, 215, 0, 0.5);
+    /* 金色光晕 */
+    transform: scale(1.3);
+    /* 稍微大一点 */
+    animation: golden-twinkle 3s infinite ease-in-out;
+}
+
+.star-wrapper.visited .city-name {
+    color: #ffd700;
+    /* 字体变金 */
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    opacity: 1;
+    /* 名字常亮 */
+}
+
+/* 4. 金色星星的闪烁动画 */
+@keyframes golden-twinkle {
+
+    0%,
+    100% {
+        opacity: 0.8;
+        transform: scale(1.3);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.5);
+    }
+}
+
+/* --- AI 搜索框样式 (居中调整版) --- */
+.search-container {
+    position: absolute;
+    /* 垂直位置：距离底部 30%，比之前更高一点，处于视觉中心偏下 */
+    bottom: 30%;
+    /* 水平绝对居中 */
+    left: 50%;
+    transform: translateX(-50%);
+
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50px;
+    padding: 5px 10px;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+
+    opacity: 0;
+    animation: fadeInSearch 2s forwards;
+    animation-delay: 5s;
+    z-index: 50;
+    transition: all 0.3s;
+}
+
+/* 搜索框淡入动画 (配合居中) */
+@keyframes fadeInSearch {
+    from {
+        opacity: 0;
+        transform: translate(-50%, 20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
+/* 下面的样式保持不变，方便你复制 */
+.search-container:hover,
+.search-container:focus-within {
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 10px 40px rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+#aiInput {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-family: 'ZCOOL KuaiLe', cursive;
+    font-size: 1.2rem;
+    padding: 10px 15px;
+    width: 280px;
+    text-align: center;
+}
+
+#aiInput::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+}
+
+#searchBtn {
+    background: transparent;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: transform 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#searchBtn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.loading-spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* 搜索框淡入动画（加入居中修正） */
+@keyframes fadeInSearch {
+    from {
+        opacity: 0;
+        transform: translate(-50%, 20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
+/* 下面的样式保持不变，为了方便你复制，我也贴在这里 */
+.search-container:hover,
+.search-container:focus-within {
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 10px 40px rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+#aiInput {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-family: 'ZCOOL KuaiLe', cursive;
+    font-size: 1.2rem;
+    padding: 10px 15px;
+    width: 280px;
+    /* 稍微宽一点 */
+    text-align: center;
+}
+
+#aiInput::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+}
+
+#searchBtn {
+    background: transparent;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: transform 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#searchBtn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.loading-spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* 搜索框淡入动画 */
+@keyframes fadeInSearch {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.search-container:hover,
+.search-container:focus-within {
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 10px 40px rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+#aiInput {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-family: 'ZCOOL KuaiLe', cursive;
+    font-size: 1.2rem;
+    padding: 10px 15px;
+    width: 250px;
+    text-align: center;
+}
+
+#aiInput::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+}
+
+#searchBtn {
+    background: transparent;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: transform 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#searchBtn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+/* 加载时的旋转动画 */
+.loading-spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* --- 新增：操作按钮容器 --- */
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    /* 两个按钮之间的间距 */
+    margin-top: 20px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+    /* 防止手机上太挤换行 */
+}
+
+/* 通用按钮样式 */
+.action-btn {
+    padding: 10px 20px;
+    font-family: 'ZCOOL KuaiLe', cursive;
+    font-size: 1.1rem;
+    color: #fff;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 50px;
+    background: rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.action-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+}
+
+/* 1. 收藏星星按钮样式 */
+.star-btn.active {
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    /* 激活变成白底黑字 */
+    border-color: #fff;
+    text-shadow: none;
+    font-weight: bold;
+}
+
+/* 2. 足迹按钮样式 (金色) */
+.visit-btn.visited {
+    background: linear-gradient(135deg, #ffd700 0%, #fdb931 100%);
+    border-color: #ffd700;
+    color: #8a6e00;
+    text-shadow: none;
+    font-weight: bold;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+}
