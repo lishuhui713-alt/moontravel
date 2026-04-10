@@ -1,7 +1,7 @@
 // ==========================================
 // 🔴 配置区域：DeepSeek 官方 API
 // ==========================================
-const API_KEY = 'sk-aeac0b10fa294806bb6a8d7d89232685'; // 记得填回你的 Key
+const API_KEY = 'sk-25b224a6c4594e9b8f6dcc8123710a41'; // 记得填回你的 Key
 const API_URL = 'https://api.deepseek.com/chat/completions';
 const MODEL_NAME = 'deepseek-chat';
 
